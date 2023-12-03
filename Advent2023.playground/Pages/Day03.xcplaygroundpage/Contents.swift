@@ -83,7 +83,7 @@ if let u = Bundle.main.url(forResource: "day_03_input", withExtension: "data"),
 // Part Two
 
 func numbers_around(_ grid: [Location : Character], _ l: Location) -> Set<Location> {
-    var locations: Set<Location> = Set()
+    var locations: Set<Location> = []
     for y in (l.y - 1) ... (l.y + 1) {
         for x in (l.x - 1) ... (l.x + 1) {
             if let n = grid[Location(x: x, y: y)],
