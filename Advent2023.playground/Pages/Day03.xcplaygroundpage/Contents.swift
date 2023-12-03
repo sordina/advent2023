@@ -82,3 +82,48 @@ if let u = Bundle.main.url(forResource: "day_03_input", withExtension: "data"),
 
 // Part Two
 
+func numbers_around(_ grid: [Location : Character], _ l: Location) -> Set<Location> {
+    var locations: Set<Location> = Set()
+    for y in (l.y - 1) ... (l.y + 1) {
+        for x in (l.x - 1) ... (l.x + 1) {
+            if let n = grid[Location(x: x, y: y)],
+               n.isNumber {
+                var x_ = x
+                while grid[Location(x: x_, y: y)]?.isNumber ?? false {
+                    x_ -= 1
+                }
+                locations.insert(Location(x: x_ + 1, y: y))
+            }
+        }
+    }
+    return locations
+}
+
+func solve_2(_ s: String) throws -> Int {
+    var output = 0
+    let parsed = try parse_input(s)
+    for (l, c) in parsed.0 {
+        if c == "*" {
+            let numbers = Array(numbers_around(parsed.0, l))
+            if numbers.count == 2,
+               let n1s = parsed.1[numbers[0]],
+               let n1 = Int(n1s),
+               let n2s = parsed.1[numbers[1]],
+               let n2 = Int(n2s) {
+                output += n1 * n2
+            }
+        }
+    }
+    return output
+}
+
+// Test part 2
+let test_answer_2 = try solve_2(example_input)
+assert(test_answer_2 == 467835)
+
+if let u = Bundle.main.url(forResource: "day_03_input", withExtension: "data"),
+   let c = try? String(contentsOf: u),
+   let sum = try? solve_2(c) {
+    
+    print(sum)
+}
