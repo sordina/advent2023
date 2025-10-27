@@ -2,12 +2,6 @@
 import Foundation
 import RegexBuilder
 
-enum MyError: Error {
-    case runtimeError(String)
-}
-
-let doh = MyError.runtimeError("doh")
-
 // Part 1
 
 func solve(_ text: String) throws -> Int {

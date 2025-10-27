@@ -58,11 +58,7 @@ func parse_map(_ line: String) throws -> (Int,Int,Int)? {
           let i1 = Int(m1),
           let i2 = Int(m2),
           let i3 = Int(m3)
-            
-    else {
-        print(line)
-        return nil
-    }
+    else { return nil }
     return (i1, i2, i3)
 }
 
@@ -116,3 +112,70 @@ if let u = Bundle.main.url(forResource: "day_05_input", withExtension: "data"),
     let sum = try! solve(c)
     print(sum)
 }
+
+
+// Part 2
+
+struct Range: Hashable {
+    var l: Int
+    var r: Int
+    
+    init(_ l: Int, _ r: Int) {
+        self.l = l
+        self.r = r
+    }
+}
+
+func parse_seeds_2(_ line: String) throws -> Set<Range> {
+    let numbers: [Range] = try line.matches(of: /(\d+) (\d+)/).map {
+        guard let l  = Int($0.output.1),
+              let r_ = Int($0.output.2),
+              let r  = Optional.some(l + r_)
+        else { throw oops }
+        return Range(l,r)
+    }
+    return Set(numbers)
+}
+
+func solve_map_2(_ p: [(Int,Int,Int)], _ r: Range) -> Set<Range> {
+    let rs = p.map { (d,s,c) in
+        let l = max(r.l, s),
+            r = min(r.r, s+c),
+            w = d-s
+        return l >= r ? nil : Range(w+l, w+r)
+    }
+    return Set(rs.compactMap{$0})
+}
+
+func solve_maps_2(_ ps: [[(Int, Int, Int)]], _ r: Set<Range>) -> Set<Range> {
+    return ps.reduce(r) { partialResult, m in
+        print("\(m) & \(partialResult)")
+        let x = partialResult.flatMap {
+            solve_map_2(m, $0)
+        }
+        return Set(x)
+    }
+}
+
+func solve2(_ x: String) throws -> Int {
+    let paragraphs = x.components(separatedBy: "\n\n")
+    let seeds = try parse_seeds_2(paragraphs.first ?? "")
+    let other = paragraphs.tail
+    let mappings = try other.map(parse_mapping)
+    let result = solve_maps_2(mappings, seeds).min(by: {$0.l < $1.l})
+    
+    guard let result else { throw MyError.runtimeError("bummer") }
+    
+    return result.l
+}
+
+let example_answer_2 = try solve2(example_input)
+
+//assert(example_answer_2 == 46)
+
+//if let u = Bundle.main.url(forResource: "day_05_input", withExtension: "data"),
+//   let c = try? String(contentsOf: u) {
+//    
+//    let sum = try! solve(c)
+//    print(sum)
+//}

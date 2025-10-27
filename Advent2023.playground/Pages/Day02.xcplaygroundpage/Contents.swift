@@ -15,12 +15,6 @@ let blue_constraint = 14
 
 typealias Output = [Int: (Int, Int, Int)]
 
-enum MyError: Error {
-    case runtimeError(String)
-}
-
-let oops = MyError.runtimeError("oops")
-
 let pair_regex = /(\d+) (.*)/
 func parse_set(_ set: String) throws -> Bool {
     for pair_string in set.components(separatedBy: ", ") {

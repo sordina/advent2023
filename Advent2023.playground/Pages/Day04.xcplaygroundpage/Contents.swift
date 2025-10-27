@@ -10,12 +10,6 @@ Card 5: 87 83 26 28 32 | 88 30 70 12 93 22 82 36
 Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11
 """
 
-enum MyError: Error {
-    case runtimeError(String)
-}
-
-let oops = MyError.runtimeError("oops")
-
 let line_regex: Regex = /Card\s+\d+:\s+(.*)\s+\|\s+(.*)/
 let space_regex: Regex = /\s+/
 func solve_line(_ line: String) throws -> Int {
